@@ -1,39 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
-import MovieList from '../components/MovieList';
-import styles from './MoviesPage.module.css';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { searchMovies } from "../Api";
+import MovieList from "../components/MovieList";
+import css from "../css/MoviesPage.module.css";
 
-const MoviesPage = () => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') || '';
+export default function MoviesPage() {
+	const [movies, setMovies] = useState([]);
+	const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (query === '') return;
+	const query = searchParams.get("query") || "";
 
-    const fetchMovies = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/search/movie?query=${query}`,
-          {
-            headers: {
-              Authorization: 'Bearer c3baf8095e801593eba38f8cbc4308d2',
-            },
-          }
-        );
-        setMovies(response.data.results);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+	useEffect(() => {
+		if (query) {
+			searchMovies(query).then(setMovies).catch(console.error);
+		}
+	}, [query]);
 
-    fetchMovies();
-  }, [query]);
+	const handleSearch = (e) => {
+		e.preventDefault();
+		const form = e.currentTarget;
+		const query = form.elements.query.value;
+		setSearchParams({ query });
+	};
 
-
+	return (
+		<div className={css.container}>
+			<form className={css.searchForm} onSubmit={handleSearch}>
+				<input
+					name="query"
+					type="text"
+					className={css.searchInput}
+					placeholder="Search movies..."
+				/>
+				<button type="submit" className={css.searchButton}>
+					Search
+				</button>
+			</form>
+			<MovieList movies={movies} />
+		</div>
+	);
+}

@@ -1,0 +1,31 @@
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  background-color: #333;
+  padding: 15px 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.link,
+.activeLink {
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.link:hover {
+  background-color: orange;
+}
+
+.activeLink {
+  background-color: red;
+  font-weight: bold;
+  color: white;
+}

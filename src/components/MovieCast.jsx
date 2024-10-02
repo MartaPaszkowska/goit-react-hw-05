@@ -1,52 +1,37 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import styles from './MovieCast.module.css';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getMovieCredits } from "../Api";
+import css from "../css/MovieCast.module.css";
 
-const MovieCast = () => {
-  const { movieId } = useParams();
-  const [cast, setCast] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function MovieCast() {
+	const { movieId } = useParams();
+	const [cast, setCast] = useState([]);
 
-  useEffect(() => {
-    const fetchCast = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits`,
-          {
-            headers: {
-              Authorization: 'Bearer c3baf8095e801593eba38f8cbc4308d2',
-            },
-          }
-        );
-        setCast(response.data.cast);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCast();
-  }, [movieId]);
+	useEffect(() => {
+		getMovieCredits(movieId).then(setCast).catch(console.error);
+	}, [movieId]);
 
-  return (
-    <div className={styles.container}>
-      {loading && <p>Loading cast...</p>}
-      {error && <p>Something went wrong: {error.message}</p>}
-      {cast.length > 0 ? (
-        <ul>
-          {cast.map(actor => (
-            <li key={actor.cast_id}>
-              {actor.name} as {actor.character}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No cast available.</p>
-      )}
-    </div>
-  );
-};
+	if (!cast.length) {
+		return <p>No cast information available.</p>;
+	}
 
-export default MovieCast;
+	return (
+		<ul className={css.castList}>
+			{cast.map((actor) => (
+				<li key={actor.id} className={css.castItem}>
+					<img
+						src={
+							actor.profile_path
+								? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+								: "https://via.placeholder.com/200x300?text=No+Image"
+						}
+						alt={actor.name}
+						className={css.castImage}
+					/>
+					<p>{actor.name}</p>
+					<p>as {actor.character}</p>
+				</li>
+			))}
+		</ul>
+	);
+}

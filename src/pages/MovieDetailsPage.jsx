@@ -1,55 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import styles from './MovieDetailsPage.module.css';
+import { useState, useEffect } from "react";
+import {
+	useParams,
+	Outlet,
+	NavLink,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
+import { getMovieDetails } from "../Api";
+import css from "../css/MovieDetailsPage.module.css";
 
-const MovieDetailsPage = () => {
-  const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const location = useLocation();
-  const backLink = location.state?.from || '/movies';
+export default function MovieDetailsPage() {
+	const { movieId } = useParams();
+	const [movie, setMovie] = useState(null);
+	const location = useLocation();
+	const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}`,
-          {
-            headers: {
-              Authorization: 'Bearer c3baf8095e801593eba38f8cbc4308d2',
-            },
-          }
-        );
-        setMovie(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMovieDetails();
-  }, [movieId]);
+	const backLink = location.state?.from || "/movies";
 
-  return (
-    <div className={styles.container}>
-      <Link to={backLink}>Go back</Link>
-      {loading && <p>Loading...</p>}
-      {error && <p>Something went wrong: {error.message}</p>}
-      {movie && (
-        <>
-          <h1>{movie.title}</h1>
-          <p>{movie.overview}</p>
-          <nav>
-            <Link to="cast">Cast</Link>
-            <Link to="reviews">Reviews</Link>
-          </nav>
-          <Outlet />
-        </>
-      )}
-    </div>
-  );
-};
+	useEffect(() => {
+		getMovieDetails(movieId).then(setMovie).catch(console.error);
+	}, [movieId]);
 
-export default MovieDetailsPage;
+	if (!movie) {
+		return <div>Loading movie details...</div>;
+	}
+
+	const { title, poster_path, overview, genres, vote_average } = movie;
+	const imageUrl = poster_path
+		? `https://image.tmdb.org/t/p/w500${poster_path}`
+		: "https://via.placeholder.com/500x750?text=No+Image";
+
+	return (
+		<div className={css.container}>
+			{}
+			<button
+				className={css.backButton}
+				onClick={() => navigate(backLink)}
+			>
+				← Back
+			</button>
+
+			{}
+			<div className={css.details}>
+				<img src={imageUrl} alt={title} className={css.poster} />
+				<div className={css.info}>
+					<h1>{title}</h1>
+					<p>User score: {vote_average * 10}%</p>
+					<h2>Overview</h2>
+					<p>{overview}</p>
+					<h2>Genres</h2>
+					<p>{genres.map((genre) => genre.name).join(", ")}</p>
+				</div>
+			</div>
+
+			<div className={css.additionalInfo}>
+				<h2>Additional Information</h2>
+				<div className={css.navLinks}>
+					<NavLink
+						to="cast"
+						className={css.navLink}
+						activeClassName={css.activeLink}
+					>
+						Cast
+					</NavLink>
+					<NavLink
+						to="reviews"
+						className={css.navLink}
+						activeClassName={css.activeLink}
+					>
+						Reviews
+					</NavLink>
+				</div>
+			</div>
+			<Outlet />
+		</div>
+	);
+}
