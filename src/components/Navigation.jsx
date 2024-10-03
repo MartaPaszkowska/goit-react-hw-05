@@ -12,6 +12,7 @@ export default function Navigation() {
 			>
 				Home
 			</NavLink>
+			<div></div>
 			<NavLink
 				to="/movies"
 				className={({ isActive }) =>

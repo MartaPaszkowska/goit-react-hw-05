@@ -6,12 +6,12 @@ import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
 	{
-  "compilerOptions": {
-    "target": "es6",
-    "jsx": "react"
-  },
-  "include": ["src/**/*"]
-}
+		compilerOptions: {
+			target: "es6",
+			jsx: "react",
+		},
+		include: ["src/**/*"],
+	},
 
 	{ ignores: ["dist"] },
 	{

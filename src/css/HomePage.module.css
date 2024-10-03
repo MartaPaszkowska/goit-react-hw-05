@@ -1,13 +1,31 @@
 .trendingContainer {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding-top: 40px;
+	margin: 20px;
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
 }
 
 .trendingTitle {
-	font-size: 28px;
+	font-size: 24px;
+	font-weight: bold;
 	margin-bottom: 20px;
-	text-align: start;
+}
+
+.movieList {
+	list-style: none;
+	padding: 0;
+}
+
+.movieList li {
+	margin-bottom: 10px;
+	font-size: 18px;
+}
+
+.movieList li a {
+	text-decoration: none;
+	color: #007bff;
+}
+
+.movieList li a:hover {
+	text-decoration: underline;
 }
