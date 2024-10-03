@@ -5,6 +5,14 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
+	{
+  "compilerOptions": {
+    "target": "es6",
+    "jsx": "react"
+  },
+  "include": ["src/**/*"]
+}
+
 	{ ignores: ["dist"] },
 	{
 		files: ["**/*.{js,jsx}"],
