@@ -6,7 +6,7 @@ import {
 	useLocation,
 	useNavigate,
 } from "react-router-dom";
-import { getMovieDetails } from "../Api";
+import { getMovieDetails } from "../api";
 import css from "../css/MovieDetailsPage.module.css";
 
 export default function MovieDetailsPage() {
