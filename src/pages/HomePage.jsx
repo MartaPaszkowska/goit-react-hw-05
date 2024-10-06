@@ -13,7 +13,7 @@ export default function HomePage() {
 	return (
 		<div>
 			<div className={css.trendingContainer}>
-				<h2 className={css.trendingTitle}>Trending today</h2>
+				<h2 className={css.trendingTitle}>Hey Gennaro 😘</h2>
 				<MovieList movies={movies} />
 			</div>
 		</div>
